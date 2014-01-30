@@ -23,7 +23,13 @@
 
 'use strict';
 
-var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
+/**
+ * @author griffinj@lafayette.edu
+ *
+ */
+//var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
+var DEFAULT_URL = /islandora\/object\/(.+)\/?/.exec(document.URL)[1] + '/datastream/OBJ/view';
+
 var DEFAULT_SCALE = 'auto';
 var DEFAULT_SCALE_DELTA = 1.1;
 var UNKNOWN_SCALE = 0;
@@ -3236,7 +3242,14 @@ var PDFView = {
     Promise.all(promises).then(function() {
       pdfDocument.getOutline().then(function(outline) {
         self.outline = new DocumentOutlineView(outline);
-        document.getElementById('viewOutline').disabled = !outline;
+
+        /**
+         * @author griffinj@lafayette.edu
+         * Disabling
+         *
+         */
+        //document.getElementById('viewOutline').disabled = !outline;
+        outline = false;
 
         if (outline && prefs.get('ifAvailableShowOutlineOnLoad')) {
           if (!self.sidebarOpen) {
@@ -5071,6 +5084,13 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
       PDFView.renderHighestPriority();
     });
 
+  /**
+   * @author griffinj@lafayette.edu
+   * Disabling
+   *
+   */
+
+  /*
   document.getElementById('viewThumbnail').addEventListener('click',
     function() {
       PDFView.switchSidebarView('thumbs');
@@ -5080,6 +5100,7 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
     function() {
       PDFView.switchSidebarView('outline');
     });
+  */
 
   document.getElementById('previous').addEventListener('click',
     function() {
@@ -5124,9 +5145,11 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
   document.getElementById('presentationMode').addEventListener('click',
     SecondaryToolbar.presentationModeClick.bind(SecondaryToolbar));
 
-  document.getElementById('openFile').addEventListener('click',
-    SecondaryToolbar.openFileClick.bind(SecondaryToolbar));
-
+  /**
+   * @author griffinj@lafayette.edu
+   * Removing
+   *
+   */
   document.getElementById('print').addEventListener('click',
     SecondaryToolbar.printClick.bind(SecondaryToolbar));
 
@@ -5205,11 +5228,20 @@ function updateViewarea() {
     store.set('scrollTop', intTop);
   });
   var href = PDFView.getAnchorUrl(pdfOpenParams);
+
+  /**
+   * @author griffinj@lafayette.edu
+   * Disabling in order to meet
+   *
+   */
+
+  /*
   document.getElementById('viewBookmark').href = href;
   document.getElementById('secondaryViewBookmark').href = href;
 
   // Update the current bookmark in the browsing history.
   PDFHistory.updateCurrentBookmark(pdfOpenParams, pageNumber);
+  */
 }
 
 window.addEventListener('resize', function webViewerResize(evt) {

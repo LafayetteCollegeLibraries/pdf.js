@@ -4432,7 +4432,19 @@ var WorkerTransport = (function WorkerTransportClosure() {
           testObj[0] = 0;
           messageHandler.send('test', testObj);
         }
-        return;
+
+        /**
+         * @author griffinj
+         * Workers don't seem to raise exceptions for Drupal
+         *
+         */
+        //return;
+        globalScope.PDFJS.disableWorker = true;
+        this.loadFakeWorkerFiles().then(function() {
+            this.setupFakeWorker();
+            workerInitializedPromise.resolve();
+          }.bind(this));
+
       } catch (e) {
         info('The worker has been disabled.');
       }
@@ -4486,6 +4498,13 @@ var WorkerTransport = (function WorkerTransportClosure() {
 
       // If the main thread is our worker, setup the handling for the messages
       // the main thread sends to it self.
+
+      /**
+       * @author griffinj@lafayette.edu
+       * Ensure that worker is loaded
+       *
+       */
+
       PDFJS.WorkerMessageHandler.setup(messageHandler);
     },
 
