@@ -5165,8 +5165,21 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
   document.getElementById('print').addEventListener('click',
     SecondaryToolbar.printClick.bind(SecondaryToolbar));
 
+  /**
+   * @author griffinj@lafayette.edu
+   * This directs the presentation button to simply view the PDF
+   * This resolves DSSSM-504
+   *
+   */
+  document.getElementById('download').addEventListener('click', function(e) {
+
+      window.location.assign(window.location.pathname + '/datastream/OBJ/download');
+    });
+
+  /*
   document.getElementById('download').addEventListener('click',
     SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
+  */
 
   if(!/newspaper\:/.exec(DEFAULT_URL) ) {
 
