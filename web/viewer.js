@@ -5142,8 +5142,20 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
       PDFView.setScale(this.value);
     });
 
+  /**
+   * @author griffinj@lafayette.edu
+   * This directs the presentation button to simply view the PDF
+   * This resolves DSSSM-500
+   *
+   */
+  document.getElementById('presentationMode').addEventListener('click', function(e) {
+
+      window.location.assign(window.location.pathname + '/datastream/OBJ/view');
+    });
+  /*
   document.getElementById('presentationMode').addEventListener('click',
     SecondaryToolbar.presentationModeClick.bind(SecondaryToolbar));
+  */
 
   /**
    * @author griffinj@lafayette.edu
@@ -5156,8 +5168,10 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
   document.getElementById('download').addEventListener('click',
     SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
 
+  if(!/newspaper\:/.exec(DEFAULT_URL) ) {
 
-  PDFView.open(file, 0);
+    PDFView.open(file, 0);
+  }
 
 }, true);
 
