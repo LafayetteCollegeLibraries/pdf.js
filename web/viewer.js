@@ -5166,7 +5166,8 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
    */
   document.getElementById('presentationMode').addEventListener('click', function(e) {
 
-      window.location.assign(window.location.pathname + '/datastream/OBJ/view');
+      //window.location.assign(window.location.pathname + '/datastream/OBJ/view');
+      window.location.assign('/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/view');
     });
   /*
   document.getElementById('presentationMode').addEventListener('click',
@@ -5189,7 +5190,8 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
    */
   document.getElementById('download').addEventListener('click', function(e) {
 
-      window.location.assign(window.location.pathname + '/datastream/OBJ/download');
+      //window.location.assign(window.location.pathname + '/datastream/OBJ/download');
+      window.location.assign('/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/download');
     });
 
   /*
