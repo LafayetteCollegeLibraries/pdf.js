@@ -4476,9 +4476,18 @@ var WorkerTransport = (function WorkerTransportClosure() {
         // In the developer build load worker_loader which in turn loads all the
         // other files and resolves the promise. In production only the
         // pdf.worker.js file is needed.
+
+        /**
+         * @author griffinj
+         * Disabled for integration with Drupal via drupal_add_js
+         * (Raised cross-browser compatibility issues regarding DSS-288)
+         *
+         */
+        /*
         Util.loadScript(PDFJS.workerSrc, function() {
           PDFJS.fakeWorkerFilesLoadedPromise.resolve();
         });
+        */
       }
       return PDFJS.fakeWorkerFilesLoadedPromise;
     },

@@ -3886,6 +3886,9 @@ var NetworkManager = (function NetworkManagerClosure() {
         xhr: xhr
       };
 
+      // @todo Remove
+      console.log(this.url);
+
       xhr.open('GET', this.url);
       xhr.withCredentials = this.withCredentials;
       for (var property in this.httpHeaders) {

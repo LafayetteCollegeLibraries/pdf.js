@@ -5197,7 +5197,7 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
     SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
   */
 
-  if( !/newspaper/.exec(document.URL) && !/newspaper:/.exec(DEFAULT_URL)) {
+  if( !/newspaper/.exec(document.URL) && !(Drupal && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.settings.islandoraDssPdf.collection == 'islandora:newspaper' )) {
 
     PDFView.open(file, 0);
   }
