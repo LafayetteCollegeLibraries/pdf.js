@@ -28,7 +28,17 @@
  *
  */
 //var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
-var DEFAULT_URL = /islandora\/object\/(.+)\/?/.exec(document.URL)[1] + '/datastream/OBJ/view';
+//var DEFAULT_URL = /islandora\/object\/(.+)\/?/.exec(document.URL)[1] + '/datastream/OBJ/view';
+if(Drupal && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.settings.islandoraDssPdf.hasOwnProperty('object')) {
+
+  var DEFAULT_URL = '/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/view';
+} else if(/islandora\/object\/(.+)\/?/.exec(document.URL)) {
+
+  var DEFAULT_URL = /islandora\/object\/(.+)\/?/.exec(document.URL)[1] + '/datastream/OBJ/view';
+} else {
+
+  var DEFAULT_URL = '';
+}
 
 var DEFAULT_SCALE = 'auto';
 var DEFAULT_SCALE_DELTA = 1.1;
@@ -61,7 +71,13 @@ var FindStates = {
 };
 
 PDFJS.imageResourcesPath = './images/';
-  PDFJS.workerSrc = '../build/pdf.worker.js';
+
+/**
+ * @author griffinj@lafayette.edu
+ *
+ */
+//PDFJS.workerSrc = '../build/pdf.worker.js';
+PDFJS.workerSrc = '/sites/all/libraries/pdf.js/build/pdf.worker.js';
 
 var mozL10n = document.mozL10n || document.webL10n;
 
@@ -5181,11 +5197,10 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
     SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
   */
 
-  if(!/newspaper\:/.exec(DEFAULT_URL) ) {
+  if( !/newspaper/.exec(document.URL) && !/newspaper:/.exec(DEFAULT_URL)) {
 
     PDFView.open(file, 0);
   }
-
 }, true);
 
 function updateViewarea() {
