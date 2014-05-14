@@ -2809,7 +2809,15 @@ var PDFView = {
   setTitleUsingUrl: function pdfViewSetTitleUsingUrl(url) {
     this.url = url;
     try {
-      this.setTitle(decodeURIComponent(getFileName(url)) || url);
+
+      /**
+       * @author griffinj@lafayette.edu
+       * Disabled in order to avoid issues related to the cleaning of embedded PDF metadata
+       * Resolves DSSSM-848
+       * @todo Refactor
+       *
+       */
+      //this.setTitle(decodeURIComponent(getFileName(url)) || url);
     } catch (e) {
       // decodeURIComponent may throw URIError,
       // fall back to using the unprocessed url in that case
@@ -3296,8 +3304,17 @@ var PDFView = {
       if (!pdfTitle && info && info['Title'])
         pdfTitle = info['Title'];
 
+      /**
+       * @author griffinj@lafayette.edu
+       * Disabled in order to avoid issues related to the cleaning of embedded PDF metadata
+       * Resolves DSSSM-848
+       * @todo Refactor
+       *
+       */
+      /*
       if (pdfTitle)
         self.setTitle(pdfTitle + ' - ' + document.title);
+      */
 
       if (info.IsAcroFormPresent) {
         console.warn('Warning: AcroForm/XFA is not supported');
