@@ -34,7 +34,8 @@ if(Drupal && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.setting
   var DEFAULT_URL = '/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/view';
 } else if(/islandora\/object\/(.+)\/?/.exec(document.URL)) {
 
-  var DEFAULT_URL = /islandora\/object\/(.+)\/?/.exec(document.URL)[1] + '/datastream/OBJ/view';
+  var object = /islandora\/object\/(.+)\/?/.exec(document.URL)[1];
+  var DEFAULT_URL = '/islandora/object/' + object + '/datastream/OBJ/view';
 } else {
 
   var DEFAULT_URL = '';
