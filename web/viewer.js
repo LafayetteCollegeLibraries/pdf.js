@@ -991,18 +991,26 @@ var PDFFindController = {
        * This work-around is implemented in order to ensure that full-phrase searching functions for documents in the PDF with improperly structured textual data
        * 
        */
-      /*
-      console.log(pageContent);
-      console.log(query);
-      console.log(matchIdx);
-      console.log(queryLen);
-      */
-
-      // Work-around
-      query = query.replace(/\s/g, '');
-
       matchIdx = pageContent.indexOf(query, matchIdx + queryLen);
       if (matchIdx === -1) {
+
+        if(!/\s/.exec(pageContent)) {
+
+          var normalizedQuery = query.replace(/\s/g, '');
+          var normMatchIdx = pageContent.indexOf(normalizedQuery, matchIdx + queryLen);
+
+          /*
+          console.log(matchIdx);
+          console.log(normalizedQuery);
+          console.log(pageContent);
+          */
+
+          if(normMatchIdx > -1) {
+
+            matches.push(normMatchIdx);
+          }
+        }
+
         break;
       }
 
