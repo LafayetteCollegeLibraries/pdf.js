@@ -985,6 +985,22 @@ var PDFFindController = {
 
     var matchIdx = -queryLen;
     while (true) {
+
+      /*
+       * @author griffinj@lafayette.edu
+       * This work-around is implemented in order to ensure that full-phrase searching functions for documents in the PDF with improperly structured textual data
+       * 
+       */
+      /*
+      console.log(pageContent);
+      console.log(query);
+      console.log(matchIdx);
+      console.log(queryLen);
+      */
+
+      // Work-around
+      query = query.replace(/\s/g, '');
+
       matchIdx = pageContent.indexOf(query, matchIdx + queryLen);
       if (matchIdx === -1) {
         break;
@@ -1020,9 +1036,18 @@ var PDFFindController = {
         function textContentResolved(bidiTexts) {
           var str = '';
 
+          // @author griffinj@lafayette
+          // Work-around for DSSSM-1105
+          // Ensures that problematic chunking is overridden
+          /*
           for (var i = 0; i < bidiTexts.length; i++) {
             str += bidiTexts[i].str;
           }
+          */
+
+          str = bidiTexts.map(function(e) { return e.str; }).join('');
+
+          //console.log(str);
 
           // Store the pageContent as a string.
           self.pageContents.push(str);
@@ -4319,6 +4344,11 @@ var PageView = function pageView(container, id, scale,
     if (textLayer) {
       this.getTextContent().then(
         function textContentResolved(textContent) {
+
+          // @author griffinj@lafayette.edu
+          //console.log('trace');
+          //console.log(textContent);
+
           textLayer.setTextContent(textContent);
         }
       );
@@ -4752,6 +4782,10 @@ var TextLayerBuilder = function textLayerBuilder(options) {
 
     // Loop over all the matches.
     for (var m = 0; m < matches.length; m++) {
+
+    // @author griffinj@lafayette.edu
+    // Highlighting the matches
+
       var matchIdx = matches[m];
       // # Calculate the begin position.
 
@@ -4865,6 +4899,9 @@ var TextLayerBuilder = function textLayerBuilder(options) {
       return;
     }
 
+    // @author griffinj@lafayette.edu
+    // Highlighting the matches
+
     for (i = i0; i < i1; i++) {
       var match = matches[i];
       var begin = match.begin;
@@ -4916,6 +4953,8 @@ var TextLayerBuilder = function textLayerBuilder(options) {
     var textDivs = this.textDivs;
     var bidiTexts = this.textContent;
     var clearedUntilDivIdx = -1;
+
+    // @author griffinj@lafayette.edu
 
     // Clear out all current matches.
     for (var i = 0; i < matches.length; i++) {
