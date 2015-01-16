@@ -29,7 +29,7 @@
  */
 //var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
 //var DEFAULT_URL = /islandora\/object\/(.+)\/?/.exec(document.URL)[1] + '/datastream/OBJ/view';
-if(Drupal && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.settings.islandoraDssPdf.hasOwnProperty('object')) {
+if(typeof(Drupal) !== 'undefined' && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.settings.islandoraDssPdf.hasOwnProperty('object')) {
 
   var DEFAULT_URL = '/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/view';
 } else if(/islandora\/object\/(.+)\/?/.exec(document.URL)) {
@@ -5232,7 +5232,12 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
   document.getElementById('presentationMode').addEventListener('click', function(e) {
 
       //window.location.assign(window.location.pathname + '/datastream/OBJ/view');
-      window.location.assign('/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/view');
+      //window.location.assign('/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/view');
+
+      // Resolves DSSSM-1128
+      //http://digital.stage.lafayette.edu/sites/all/libraries/pdf.js/web/viewer.html?file=http://digital.stage.lafayette.edu/islandora/object/alumni:11/datastream/OBJ/view
+      var viewerUrl = window.location.protocol + '//' + window.location.host + '/sites/all/libraries/pdf.js/web/viewer.html?file=' + window.location.pathname + '/datastream/OBJ/view';
+      window.location.assign(viewerUrl);
     });
   /*
   document.getElementById('presentationMode').addEventListener('click',
@@ -5257,6 +5262,9 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
 
       //window.location.assign(window.location.pathname + '/datastream/OBJ/download');
       window.location.assign('/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/download');
+
+      
+
     });
 
   /*
@@ -5264,7 +5272,7 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
     SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
   */
 
-  if( !/newspaper/.exec(document.URL) && !(Drupal && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.settings.islandoraDssPdf.collection == 'islandora:newspaper' )) {
+  if( !/newspaper/.exec(document.URL) && !(typeof(Drupal) !== 'undefined' && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.settings.islandoraDssPdf.collection == 'islandora:newspaper' )) {
 
     PDFView.open(file, 0);
   }
