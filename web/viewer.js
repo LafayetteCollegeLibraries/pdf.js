@@ -253,6 +253,13 @@ var ProgressBar = (function ProgressBarClosure() {
     // Fetch the sub-elements for later.
     this.div = document.querySelector(id + ' .progress');
 
+    /**
+     * Append a textual message to the status 
+     * Resolves DSSSM-1148
+     *
+     */
+    
+
     // Get the loading bar element, so it can be resized to fit the viewer.
     this.bar = this.div.parentNode;
 
@@ -2901,6 +2908,14 @@ var PDFView = {
       function getDocumentCallback(pdfDocument) {
         self.load(pdfDocument, scale);
         self.loading = false;
+
+        /**
+         * @author griffinj@lafayette.edu
+         * Hide the progress message
+         * Resolves DSSSM-1148
+         *
+         */
+        jQuery('#viewerContainer .statusMessage').addClass('hidden');
       },
       function getDocumentError(message, exception) {
         var loadingErrorMessage = mozL10n.get('loading_error', null,
