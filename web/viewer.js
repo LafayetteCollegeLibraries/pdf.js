@@ -5251,7 +5251,7 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
 
       // Resolves DSSSM-1128
       //http://digital.stage.lafayette.edu/sites/all/libraries/pdf.js/web/viewer.html?file=http://digital.stage.lafayette.edu/islandora/object/alumni:11/datastream/OBJ/view
-      var viewerUrl = window.location.protocol + '//' + window.location.host + '/sites/all/libraries/pdf.js/web/viewer.html?file=' + window.location.pathname + '/datastream/OBJ/view';
+      var viewerUrl = window.location.protocol + '//' + window.location.host + '/sites/all/libraries/pdf.js/web/viewer.html?file=' + window.location.protocol + '//' + window.location.host + '/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/view';
       window.location.assign(viewerUrl);
     });
   /*
