@@ -2915,7 +2915,7 @@ var PDFView = {
          * Resolves DSSSM-1148
          *
          */
-        jQuery('#viewerContainer .statusMessage').addClass('hidden');
+        jQuery('#viewerContainer .status').addClass('hidden');
       },
       function getDocumentError(message, exception) {
         var loadingErrorMessage = mozL10n.get('loading_error', null,
