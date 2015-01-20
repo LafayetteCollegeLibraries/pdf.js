@@ -1790,7 +1790,7 @@ html[dir='rtl'] #documentPropertiesContainer .row > * {
 /* hide full-screen button when in full-screen for pdf viewer */
 /* @author goodnowt */
 
-body > div#outerContainer #presentationMode {
+body > div#outerContainer #presentationMode, body > div#outerContainer #secondaryPresentationMode {
 	
 	display:none;
 }
