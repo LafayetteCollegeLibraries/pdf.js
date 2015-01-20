@@ -5755,10 +5755,16 @@ window.addEventListener('keydown', function keydown(evt) {
 
 window.addEventListener('beforeprint', function beforePrint(evt) {
   PDFView.beforePrint();
+  // @author goodnowt switch on print message to explain in-browser vs full-page printing
+  var printMessage = document.getElementById('printMessage');
+  printMessage.className = 'showPrintMessage';
 });
 
 window.addEventListener('afterprint', function afterPrint(evt) {
   PDFView.afterPrint();
+  // @author goodnowt switch off print message to explain in-browser vs full-page printing
+  var printMessage = document.getElementById('printMessage');
+  printMessage.className = 'hidePrintMessage';
 });
 
 (function animationStartedClosure() {
