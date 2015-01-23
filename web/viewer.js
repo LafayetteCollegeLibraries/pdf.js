@@ -991,38 +991,50 @@ var PDFFindController = {
     var matches = [];
 
     var matchIdx = -queryLen;
-    while (true) {
 
-      /*
-       * @author griffinj@lafayette.edu
-       * This work-around is implemented in order to ensure that full-phrase searching functions for documents in the PDF with improperly structured textual data
-       * 
-       */
-      matchIdx = pageContent.indexOf(query, matchIdx + queryLen);
-      if (matchIdx === -1) {
+    /**
+     * @author griffinj@lafayette.edu
+     * Disgraceful work-around
+     * @todo Refactor
+     * Resolves DSSSM-1105
+     *
+     */
+    //while (true) {
+    if(true) {
 
-        if(!/\s/.exec(pageContent)) {
+      if( typeof(Drupal) !== 'undefined' && Drupal.settings.islandoraDssPdf.collection == 'islandora:alumni' ) {
 
-          var normalizedQuery = query.replace(/\s/g, '');
-          var normMatchIdx = pageContent.indexOf(normalizedQuery, matchIdx + queryLen);
+        var normalizedQuery = query.replace(/\s/g, '');
+        var normMatchIdx = pageContent.indexOf(normalizedQuery, matchIdx + queryLen);
 
-          /*
+        /*
           console.log(matchIdx);
           console.log(normalizedQuery);
           console.log(pageContent);
-          */
+          console.log(normMatchIdx);
+        */
 
-          if(normMatchIdx > -1) {
+        if(normMatchIdx > -1) {
 
-            matches.push(normMatchIdx);
-          }
+          matches.push(normMatchIdx);
         }
+        
+      } else {
 
-        break;
+        /*
+         * @author griffinj@lafayette.edu
+         * This work-around is implemented in order to ensure that full-phrase searching functions for documents in the PDF with improperly structured textual data
+         * 
+         */
+        matchIdx = pageContent.indexOf(query, matchIdx + queryLen);
+
+        if(matchIdx > -1) {
+
+          matches.push(matchIdx);
+        }
       }
-
-      matches.push(matchIdx);
     }
+
     this.pageMatches[pageIndex] = matches;
     this.updatePage(pageIndex);
     if (this.resumePageIdx === pageIndex) {

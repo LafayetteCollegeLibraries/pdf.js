@@ -15213,7 +15213,7 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
 
       // @author griffinj@lafayette.edu
       // Chunks are successfully generated here
-      var testChunks = bidiTexts.filter(function(e) { return e.str == 'Neil'; });
+      //var testChunks = bidiTexts.filter(function(e) { return e.str == 'Neil'; });
       //console.log(testChunks);
 
       return bidiTexts;
