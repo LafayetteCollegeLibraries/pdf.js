@@ -5302,10 +5302,16 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
     SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
   */
 
-  if( !/newspaper/.exec(document.URL) && !(typeof(Drupal) !== 'undefined' && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.settings.islandoraDssPdf.collection == 'islandora:newspaper' )) {
+  /**
+   * @author griffinj@lafayette.edu
+   * Removing this condition in order to ensure that the full-screen viewing widget is enabled for members of the Lafayette Newspaper Collection
+   * Resolves DSS-455
+   *
+   */
+  //if( !/newspaper/.exec(document.URL) && !(typeof(Drupal) !== 'undefined' && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.settings.islandoraDssPdf.collection == 'islandora:newspaper' )) {
 
-    PDFView.open(file, 0);
-  }
+  PDFView.open(file, 0);
+  //}
 }, true);
 
 function updateViewarea() {
