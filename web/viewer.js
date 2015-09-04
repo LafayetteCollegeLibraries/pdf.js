@@ -1002,17 +1002,21 @@ var PDFFindController = {
     //while (true) {
     if(true) {
 
+      /**
+       * Work-around for handling UTF-8 encoding issues for quotation characters
+       * @author griffinj@lafayette.edu
+       * Resolves DSS-572
+       *
+       */
+      pageContent = pageContent.replace(/‘/g, "'");
+      pageContent = pageContent.replace(/’/g, "'");
+      pageContent = pageContent.replace(/“/g, '"');
+      pageContent = pageContent.replace(/”/g, '"');
+
       if( typeof(Drupal) !== 'undefined' && Drupal.settings.islandoraDssPdf.collection == 'islandora:alumni' ) {
 
         var normalizedQuery = query.replace(/\s/g, '');
         var normMatchIdx = pageContent.indexOf(normalizedQuery, matchIdx + queryLen);
-
-        /*
-          console.log(matchIdx);
-          console.log(normalizedQuery);
-          console.log(pageContent);
-          console.log(normMatchIdx);
-        */
 
         if(normMatchIdx > -1) {
 
