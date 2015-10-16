@@ -27,8 +27,6 @@
  * @author griffinj@lafayette.edu
  *
  */
-//var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
-//var DEFAULT_URL = /islandora\/object\/(.+)\/?/.exec(document.URL)[1] + '/datastream/OBJ/view';
 if(typeof(Drupal) !== 'undefined' && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.settings.islandoraDssPdf.hasOwnProperty('object')) {
 
   var DEFAULT_URL = '/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/view';
@@ -36,6 +34,10 @@ if(typeof(Drupal) !== 'undefined' && Drupal.settings.hasOwnProperty('islandoraDs
 
   var object = /islandora\/object\/(.+)\/?/.exec(document.URL)[1];
   var DEFAULT_URL = '/islandora/object/' + object + '/datastream/OBJ/view';
+} else if(/files\/(.+?)(\/|#.*)?$/.exec("https://ldr.stage.lafayette.edu/files/qn59qr352/")) {
+  
+  var m = /files\/(.+?)(\/|#.*)?$/.exec(document.URL);
+  var DEFAULT_URL = '/downloads/' + m[1];
 } else {
 
   var DEFAULT_URL = '';
@@ -5275,7 +5277,7 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
 	      var viewerUrl = window.location.protocol + '//' + window.location.host + '/sites/all/libraries/pdf.js/web/viewer.html?file=' + window.location.protocol + '//' + window.location.host + '/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/view';
 	      window.location.assign(viewerUrl);
 	  }
-      });
+    });
 
   /**
    * @author griffinj@lafayette.edu
@@ -5306,7 +5308,7 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
 
 	      window.location.assign('/islandora/object/' + Drupal.settings.islandoraDssPdf.object + '/datastream/OBJ/download');
 	  }
-      });
+    });
 
   /**
    * @author griffinj@lafayette.edu
@@ -5314,10 +5316,7 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
    * Resolves DSS-455
    *
    */
-  //if( !/newspaper/.exec(document.URL) && !(typeof(Drupal) !== 'undefined' && Drupal.settings.hasOwnProperty('islandoraDssPdf') && Drupal.settings.islandoraDssPdf.collection == 'islandora:newspaper' )) {
-
   PDFView.open(file, 0);
-  //}
 }, true);
 
 function updateViewarea() {
