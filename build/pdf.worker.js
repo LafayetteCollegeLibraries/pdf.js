@@ -14866,6 +14866,7 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
       resources = resources || new Dict();
       var xobjs = resources.get('XObject') || new Dict();
       var patterns = resources.get('Pattern') || new Dict();
+
       var preprocessor = new EvaluatorPreprocessor(stream, xref);
       if (evaluatorState) {
         preprocessor.setState(evaluatorState);
@@ -15054,6 +15055,13 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
       var res = resources;
 
       var chunk = '';
+
+      // griffinj
+      var spacedChunks = [''];
+      var spacedChunksParams = [];
+
+      var currentSpacedChunk = 0;
+
       var font = null;
       var charSpace = 0, wordSpace = 0;
       var operation;
@@ -15070,7 +15078,17 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
               textState.textRise = args[0];
               break;
             case OPS.setHScale:
+
+              // griffinj
+              // This appears to signify a new line
+              spacedChunks.push('');
+              currentSpacedChunk++;
+
               textState.textHScale = args[0] / 100;
+
+              // griffinj
+              //continue;
+
               break;
             case OPS.setLeading:
               textState.leading = args[0];
@@ -15091,6 +15109,10 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
               break;
             case OPS.setCharSpacing:
               charSpace = args[0];
+
+              // griffinj
+              //continue;
+
               break;
             case OPS.setWordSpacing:
               wordSpace = args[0];
@@ -15180,9 +15202,38 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
               }
               break;
           } // switch
+          
+          // griffinj
+          //console.log('parsed op:' + fn);
+
+          // griffinj
+          /*
+          var renderParams = textState.calcRenderParams(preprocessor.ctm);
+          var fontHeight = textState.fontSize * renderParams.vScale;
+
+          if (font !== null && font !== undefined) {
+
+            var fontAscent = font.ascent ? font.ascent * fontHeight :
+              font.descent ? (1 + font.descent) * fontHeight : fontHeight;
+
+          } else {
+
+            var fontAscent = fontHeight;
+          }
+
+          spacedChunksParams[currentSpacedChunk] = { renderParams: renderParams, fontHeight: fontHeight, fontAscent: fontAscent };
+          */
 
           if (chunk !== '') {
+
+            // griffinj
+            spacedChunks[currentSpacedChunk] += chunk;
+            //console.log('parsed chunk:' + chunk);
+
             var bidiResult = PDFJS.bidi(chunk, -1, font.vertical);
+
+            // griffinj
+
             var bidiText = {
               str: bidiResult.str,
               dir: bidiResult.dir
@@ -15195,6 +15246,10 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
             var fontHeight = textState.fontSize * renderParams.vScale;
             var fontAscent = font.ascent ? font.ascent * fontHeight :
               font.descent ? (1 + font.descent) * fontHeight : fontHeight;
+
+            // griffinj
+            //spacedChunksParams[currentSpacedChunk] = { renderParams: renderParams, fontHeight: fontHeight, fontAscent: fontAscent };
+
             bidiText.x = renderParams.renderMatrix[4] - (fontAscent *
                            Math.sin(renderParams.angle));
             bidiText.y = renderParams.renderMatrix[5] + (fontAscent *
@@ -15210,6 +15265,49 @@ var PartialEvaluator = (function PartialEvaluatorClosure() {
             chunk = '';
           }
       } // while
+
+      // griffinj
+      //for(var i in spacedChunks) {
+      for(var i in []) {
+
+        // Very limiting work around, but it must be done
+
+        var bidiTexts = [];
+        var bidiResult = PDFJS.bidi(spacedChunks[i], -1);
+
+        var bidiText = {
+          str: bidiResult.str,
+          dir: bidiResult.dir
+        };
+
+        var params = spacedChunksParams[i];
+
+        //var renderParams = textState.calcRenderParams(preprocessor.ctm);
+        var renderParams = params.renderParams;
+
+        bidiText.x = renderParams.renderMatrix[4] - (textState.fontSize *
+                                                     renderParams.vScale * Math.sin(renderParams.angle));
+        bidiText.y = renderParams.renderMatrix[5] + (textState.fontSize *
+                                                     renderParams.vScale * Math.cos(renderParams.angle));
+
+        var fontHeight = params.fontHeight;
+        var fontAscent = params.fontAscent;
+        
+        bidiText.x = renderParams.renderMatrix[4] - (fontAscent *
+                                                     Math.sin(renderParams.angle));
+        bidiText.y = renderParams.renderMatrix[5] + (fontAscent *
+                                                     Math.cos(renderParams.angle));
+        if (bidiText.dir == 'ttb') {
+          bidiText.x += renderParams.vScale / 2;
+          bidiText.y -= renderParams.vScale;
+        }
+        bidiText.angle = renderParams.angle;
+        bidiText.size = fontHeight;
+        bidiTexts.push(bidiText);
+      }
+
+      // griffinj
+      
 
       // @author griffinj@lafayette.edu
       // Chunks are successfully generated here
@@ -16099,6 +16197,10 @@ var EvaluatorPreprocessor = (function EvaluatorPreprocessor() {
         }
 
         var fn = opSpec.id;
+
+        // griffinj
+        //warn('command: "' + cmd + '"');
+        //warn('args: "' + args.join(',') + '"');
 
         // Validate the number of arguments for the command
         if (opSpec.variableArgs) {
@@ -31730,6 +31832,10 @@ var Parser = (function ParserClosure() {
         return num;
       }
       if (isString(this.buf1)) { // string
+
+        // griffinj
+        //warn('getting a string');
+
         var str = this.buf1;
         this.shift();
         if (cipherTransform)
@@ -32080,12 +32186,18 @@ var Lexer = (function LexerClosure() {
             strBuf.push('(');
             break;
           case 0x29: // ')'
+
             if (--numParen === 0) {
+
+              //griffinj
+              //warn('terminating for :' + strBuf.join('') );
+
               this.nextChar(); // consume strings ')'
               done = true;
             } else {
               strBuf.push(')');
             }
+            
             break;
           case 0x5C: // '\\'
             ch = this.nextChar();
@@ -32095,9 +32207,17 @@ var Lexer = (function LexerClosure() {
                 done = true;
                 break;
               case 0x6E: // 'n'
+
+                // griffinj
+                //warn('found a newline');
+
                 strBuf.push('\n');
                 break;
               case 0x72: // 'r'
+
+                // griffinj
+                //warn('found a carriage return');
+
                 strBuf.push('\r');
                 break;
               case 0x74: // 't'
@@ -32131,6 +32251,10 @@ var Lexer = (function LexerClosure() {
                 strBuf.push(String.fromCharCode(x));
                 break;
               case 0x0A: case 0x0D: // LF, CR
+
+                // griffinj
+                //warn('found a differently-encoded line feed or carriage return');
+
                 break;
               default:
                 strBuf.push(String.fromCharCode(ch));
@@ -32142,12 +32266,20 @@ var Lexer = (function LexerClosure() {
             break;
         }
         if (done) {
+
+          // griffinj
+          //warn('done for :' + strBuf.join('') );
+
           break;
         }
         if (!charBuffered) {
           ch = this.nextChar();
         }
       }
+
+      // griffinj
+      //warn('processed for the string: ' + strBuf.join(''));
+
       return strBuf.join('');
     },
     getName: function Lexer_getName() {
@@ -32174,6 +32306,10 @@ var Lexer = (function LexerClosure() {
         error('Warning: name token is longer than allowed by the spec: ' +
               strBuf.length);
       }
+
+      // griffinj
+      // warn('processed for the name: ' + strBuf.join(''));
+
       return new Name(strBuf.join(''));
     },
     getHexString: function Lexer_getHexString() {
@@ -32214,6 +32350,10 @@ var Lexer = (function LexerClosure() {
           ch = this.nextChar();
         }
       }
+
+      // griffinj
+      //warn('processed for the name: ' + strBuf.join(''));
+
       return strBuf.join('');
     },
     getObj: function Lexer_getObj() {
@@ -32240,20 +32380,40 @@ var Lexer = (function LexerClosure() {
         case 0x30: case 0x31: case 0x32: case 0x33: case 0x34: // '0'-'4'
         case 0x35: case 0x36: case 0x37: case 0x38: case 0x39: // '5'-'9'
         case 0x2B: case 0x2D: case 0x2E: // '+', '-', '.'
+
+        // griffinj
+        //        warn('found a number');
+
           return this.getNumber();
         case 0x28: // '('
           return this.getString();
         case 0x2F: // '/'
+
+        // griffinj
+        //        warn('found a name');
+
           return this.getName();
         // array punctuation
         case 0x5B: // '['
+
+        // griffinj
+        //        warn('opening an array');
+
           this.nextChar();
           return Cmd.get('[');
         case 0x5D: // ']'
+
+        // griffinj
+        //        warn('closing an array');
+
           this.nextChar();
           return Cmd.get(']');
         // hex string or dict punctuation
         case 0x3C: // '<'
+
+        // griffinj
+        //        warn('opening a hex or dict');
+
           ch = this.nextChar();
           if (ch === 0x3C) {
             // dict punctuation
@@ -32263,6 +32423,10 @@ var Lexer = (function LexerClosure() {
           return this.getHexString();
         // dict punctuation
         case 0x3E: // '>'
+
+        // griffinj
+        //        warn('closing a hex or dict');
+
           ch = this.nextChar();
           if (ch === 0x3E) {
             this.nextChar();
@@ -32270,9 +32434,17 @@ var Lexer = (function LexerClosure() {
           }
           return Cmd.get('>');
         case 0x7B: // '{'
+
+        // griffinj
+        //        warn('opening a {');
+
           this.nextChar();
           return Cmd.get('{');
         case 0x7D: // '}'
+
+        // griffinj
+        //        warn('closing a }');
+
           this.nextChar();
           return Cmd.get('}');
         case 0x29: // ')'

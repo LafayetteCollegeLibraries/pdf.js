@@ -1661,6 +1661,15 @@ html[dir='rtl'] #documentPropertiesContainer .row > * {
     top: 0;
     left: 0;
   }
+  
+	/* fix print page breaks in pdf.js */
+
+	#printContainer div {
+	
+		page-break-after: always;
+		page-break-inside: avoid;
+		position: relative !important;
+	}
 }
 
 .visibleLargeView,

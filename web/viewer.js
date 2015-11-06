@@ -999,8 +999,13 @@ var PDFFindController = {
      * Resolves DSSSM-1105
      *
      */
-    //while (true) {
     if(true) {
+
+    /**
+     * Resolves DSS-553
+     *
+     */
+    //if(false) {
 
       /**
        * Work-around for handling UTF-8 encoding issues for quotation characters
@@ -1013,7 +1018,9 @@ var PDFFindController = {
       pageContent = pageContent.replace(/“/g, '"');
       pageContent = pageContent.replace(/”/g, '"');
 
+      /*
       if( typeof(Drupal) !== 'undefined' && Drupal.settings.islandoraDssPdf.collection == 'islandora:alumni' ) {
+      if( false ) {
 
         var normalizedQuery = query.replace(/\s/g, '');
         var normMatchIdx = pageContent.indexOf(normalizedQuery, matchIdx + queryLen);
@@ -1024,18 +1031,33 @@ var PDFFindController = {
         }
         
       } else {
+      */
 
         /*
          * @author griffinj@lafayette.edu
          * This work-around is implemented in order to ensure that full-phrase searching functions for documents in the PDF with improperly structured textual data
          * 
          */
+      /*
         matchIdx = pageContent.indexOf(query, matchIdx + queryLen);
 
         if(matchIdx > -1) {
 
           matches.push(matchIdx);
         }
+      }
+      */
+
+      /*
+       * @author griffinj@lafayette.edu
+       * This work-around is implemented in order to ensure that full-phrase searching functions for documents in the PDF with improperly structured textual data
+       * 
+       */
+      matchIdx = pageContent.indexOf(query, matchIdx + queryLen);
+
+      if(matchIdx > -1) {
+
+        matches.push(matchIdx);
       }
     }
 
